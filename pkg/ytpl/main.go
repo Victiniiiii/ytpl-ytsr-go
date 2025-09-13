@@ -1,20 +1,13 @@
 package ytpl
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
 	"io"
-	"log"
-	"math/rand"
 	"net/http"
 	"net/url"
-	"os"
-	"path/filepath"
 	"regexp"
-	"strconv"
 	"strings"
-	"time"
 )
 
 const (
@@ -30,369 +23,6 @@ var (
 	YTHosts            = []string{"www.youtube.com", "youtube.com", "music.youtube.com"}
 )
 
-type PlaylistItem struct {
-	ID         string `json:"id"`
-	Title      string `json:"title"`
-	URL        string `json:"url"`
-	Duration   string `json:"duration"`
-	Thumbnail  string `json:"thumbnail"`
-	Author     string `json:"author"`
-	AuthorURL  string `json:"author_url"`
-	IsLiveNow  bool   `json:"is_live_now"`
-	IsUpcoming bool   `json:"is_upcoming"`
-	IsPremiere bool   `json:"is_premiere"`
-}
-
-type Thumbnail struct {
-	URL    string `json:"url"`
-	Width  int    `json:"width"`
-	Height int    `json:"height"`
-}
-
-type PlaylistInfo struct {
-	ID          string         `json:"id"`
-	Thumbnail   Thumbnail      `json:"thumbnail"`
-	URL         string         `json:"url"`
-	Title       string         `json:"title"`
-	Description string         `json:"description"`
-	TotalItems  int            `json:"total_items"`
-	Views       int            `json:"views"`
-	Items       []PlaylistItem `json:"items"`
-}
-
-type Options struct {
-	Limit          int
-	RequestOptions *http.Client
-	Query          map[string]string
-}
-
-type Context struct {
-	Client struct {
-		ClientName    string `json:"clientName"`
-		ClientVersion string `json:"clientVersion"`
-	} `json:"client"`
-}
-
-type ParsedResponse struct {
-	JSON    map[string]interface{}
-	APIKey  string
-	Context Context
-}
-
-func getContinuationToken(item map[string]interface{}) string {
-	if item == nil {
-		return ""
-	}
-
-	continuationItemRenderer, ok := item["continuationItemRenderer"]
-	if !ok {
-		return ""
-	}
-
-	renderer, ok := continuationItemRenderer.(map[string]interface{})
-	if !ok {
-		return ""
-	}
-
-	if continuationEndpoint, ok := renderer["continuationEndpoint"].(map[string]interface{}); ok {
-		if continuationCommand, ok := continuationEndpoint["continuationCommand"].(map[string]interface{}); ok {
-			if token, ok := continuationCommand["token"].(string); ok {
-				return token
-			}
-		}
-	}
-
-	if button, ok := renderer["button"].(map[string]interface{}); ok {
-		if buttonRenderer, ok := button["buttonRenderer"].(map[string]interface{}); ok {
-			if command, ok := buttonRenderer["command"].(map[string]interface{}); ok {
-				if continuationCommand, ok := command["continuationCommand"].(map[string]interface{}); ok {
-					if token, ok := continuationCommand["token"].(string); ok {
-						return token
-					}
-				}
-			}
-		}
-	}
-
-	if trigger, ok := renderer["trigger"].(map[string]interface{}); ok {
-		if continuationCommand, ok := trigger["continuationCommand"].(map[string]interface{}); ok {
-			if token, ok := continuationCommand["token"].(string); ok {
-				return token
-			}
-		}
-	}
-
-	token := findTokenRecursively(renderer)
-	if token != "" {
-		return token
-	}
-
-	return ""
-}
-
-func findTokenRecursively(obj interface{}) string {
-	switch v := obj.(type) {
-	case map[string]interface{}:
-		if continuationCommand, ok := v["continuationCommand"].(map[string]interface{}); ok {
-			if token, ok := continuationCommand["token"].(string); ok {
-				return token
-			}
-		}
-		for _, value := range v {
-			if result := findTokenRecursively(value); result != "" {
-				return result
-			}
-		}
-	case []interface{}:
-		for _, item := range v {
-			if result := findTokenRecursively(item); result != "" {
-				return result
-			}
-		}
-	}
-	return ""
-}
-
-func checkArgs(plistID string, options *Options) *Options {
-	if options == nil {
-		options = &Options{}
-	}
-	if options.Limit <= 0 {
-		options.Limit = 100
-	}
-	if options.RequestOptions == nil {
-		options.RequestOptions = &http.Client{Timeout: 30 * time.Second}
-	}
-	if options.Query == nil {
-		options.Query = make(map[string]string)
-	}
-	options.Query["list"] = plistID
-	return options
-}
-
-func parseText(textObj interface{}) string {
-	if textObj == nil {
-		return ""
-	}
-
-	switch v := textObj.(type) {
-	case string:
-		return v
-	case map[string]interface{}:
-		if simpleText, ok := v["simpleText"].(string); ok {
-			return simpleText
-		}
-		if runs, ok := v["runs"].([]interface{}); ok {
-			var result strings.Builder
-			for _, run := range runs {
-				if runMap, ok := run.(map[string]interface{}); ok {
-					if text, ok := runMap["text"].(string); ok {
-						result.WriteString(text)
-					}
-				}
-			}
-			return result.String()
-		}
-	}
-	return ""
-}
-
-func parseNumFromText(textObj interface{}) int {
-	text := parseText(textObj)
-	if text == "" {
-		return 0
-	}
-
-	numStr := regexp.MustCompile(`[^\d,.]`).ReplaceAllString(text, "")
-	numStr = strings.ReplaceAll(numStr, ",", "")
-
-	if num, err := strconv.Atoi(numStr); err == nil {
-		return num
-	}
-	return 0
-}
-
-func parseItem(rawItem interface{}) *PlaylistItem {
-	itemMap, ok := rawItem.(map[string]interface{})
-	if !ok {
-		return nil
-	}
-
-	var renderer map[string]interface{}
-	for key, value := range itemMap {
-		if strings.Contains(key, "VideoRenderer") {
-			renderer, _ = value.(map[string]interface{})
-			break
-		}
-	}
-
-	if renderer == nil {
-		return nil
-	}
-
-	item := &PlaylistItem{}
-
-	if videoID, ok := renderer["videoId"].(string); ok {
-		item.ID = videoID
-		item.URL = fmt.Sprintf("https://www.youtube.com/watch?v=%s", videoID)
-	}
-
-	item.Title = parseText(renderer["title"])
-
-	if thumbnails, ok := renderer["thumbnail"].(map[string]interface{}); ok {
-		if thumbnailList, ok := thumbnails["thumbnails"].([]interface{}); ok && len(thumbnailList) > 0 {
-			if thumb, ok := thumbnailList[0].(map[string]interface{}); ok {
-				if url, ok := thumb["url"].(string); ok {
-					item.Thumbnail = url
-				}
-			}
-		}
-	}
-
-	if lengthText, ok := renderer["lengthText"].(map[string]interface{}); ok {
-		item.Duration = parseText(lengthText)
-	}
-
-	if ownerText, ok := renderer["ownerText"].(map[string]interface{}); ok {
-		item.Author = parseText(ownerText)
-	}
-
-	return item
-}
-
-func parseBody(body string, opts *Options) (*ParsedResponse, error) {
-	parsed := &ParsedResponse{}
-
-	apiKeyStart := strings.Index(body, `"INNERTUBE_API_KEY":"`)
-	if apiKeyStart != -1 {
-		apiKeyStart += len(`"INNERTUBE_API_KEY":"`)
-		apiKeyEnd := strings.Index(body[apiKeyStart:], `"`)
-		if apiKeyEnd != -1 {
-			parsed.APIKey = body[apiKeyStart : apiKeyStart+apiKeyEnd]
-		}
-	}
-
-	versionStart := strings.Index(body, `"clientVersion":"`)
-	if versionStart != -1 {
-		versionStart += len(`"clientVersion":"`)
-		versionEnd := strings.Index(body[versionStart:], `"`)
-		if versionEnd != -1 {
-			parsed.Context.Client.ClientVersion = body[versionStart : versionStart+versionEnd]
-			parsed.Context.Client.ClientName = "WEB"
-		}
-	}
-
-	jsonStart := strings.Index(body, `var ytInitialData = `)
-	if jsonStart != -1 {
-		jsonStart += len(`var ytInitialData = `)
-		jsonEnd := strings.Index(body[jsonStart:], `;</script>`)
-		if jsonEnd != -1 {
-			jsonStr := body[jsonStart : jsonStart+jsonEnd]
-			if err := json.Unmarshal([]byte(jsonStr), &parsed.JSON); err == nil {
-				return parsed, nil
-			}
-		}
-	}
-
-	return parsed, nil
-}
-
-func doPost(url string, client *http.Client, payload interface{}) (map[string]interface{}, error) {
-	jsonData, err := json.Marshal(payload)
-	if err != nil {
-		return nil, err
-	}
-
-	resp, err := client.Post(url, "application/json", strings.NewReader(string(jsonData)))
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	var result map[string]interface{}
-	if err := json.Unmarshal(body, &result); err != nil {
-		return nil, err
-	}
-
-	return result, nil
-}
-
-func parsePage2(apiKey string, token string, context Context, opts *Options) ([]PlaylistItem, error) {
-	payload := map[string]interface{}{
-		"context":      context,
-		"continuation": token,
-	}
-
-	jsonResp, err := doPost(BaseAPIURL+apiKey, opts.RequestOptions, payload)
-	if err != nil {
-		return nil, err
-	}
-
-	actions, ok := jsonResp["onResponseReceivedActions"].([]interface{})
-	if !ok || len(actions) == 0 {
-		return []PlaylistItem{}, nil
-	}
-
-	action, ok := actions[0].(map[string]interface{})
-	if !ok {
-		return []PlaylistItem{}, nil
-	}
-
-	appendAction, ok := action["appendContinuationItemsAction"].(map[string]interface{})
-	if !ok {
-		return []PlaylistItem{}, nil
-	}
-
-	wrapper, ok := appendAction["continuationItems"].([]interface{})
-	if !ok {
-		return []PlaylistItem{}, nil
-	}
-
-	var parsedItems []PlaylistItem
-	for i, item := range wrapper {
-		if i >= opts.Limit {
-			break
-		}
-		if parsedItem := parseItem(item); parsedItem != nil {
-			parsedItems = append(parsedItems, *parsedItem)
-		}
-	}
-
-	opts.Limit -= len(parsedItems)
-
-	var nextToken string
-	for _, item := range wrapper {
-		if itemMap, ok := item.(map[string]interface{}); ok {
-			for key := range itemMap {
-				if key == "continuationItemRenderer" {
-					nextToken = getContinuationToken(itemMap)
-					break
-				}
-			}
-			if nextToken != "" {
-				break
-			}
-		}
-	}
-
-	if nextToken == "" || opts.Limit < 1 {
-		return parsedItems, nil
-	}
-
-	nestedResp, err := parsePage2(apiKey, nextToken, context, opts)
-	if err != nil {
-		return parsedItems, err
-	}
-
-	parsedItems = append(parsedItems, nestedResp...)
-	return parsedItems, nil
-}
-
 func GetPlaylistID(linkOrID string) (string, error) {
 	if linkOrID == "" {
 		return "", errors.New("the linkOrId has to be a non-empty string")
@@ -401,6 +31,7 @@ func GetPlaylistID(linkOrID string) (string, error) {
 	if PlaylistRegex.MatchString(linkOrID) || AlbumRegex.MatchString(linkOrID) {
 		return linkOrID, nil
 	}
+
 	if ChannelRegex.MatchString(linkOrID) {
 		return "UU" + linkOrID[2:], nil
 	}
@@ -526,29 +157,6 @@ func ValidateID(linkOrID string) bool {
 	}
 
 	return false
-}
-
-func logger(content string) {
-	dir := filepath.Join(".", "dumps")
-	if err := os.MkdirAll(dir, 0755); err != nil {
-		log.Printf("Failed to create dumps directory: %v", err)
-		return
-	}
-
-	filename := fmt.Sprintf("%s-%d.txt",
-		strconv.FormatInt(rand.Int63(), 36)[3:],
-		time.Now().Unix())
-	filepath := filepath.Join(dir, filename)
-
-	if err := os.WriteFile(filepath, []byte(content), 0644); err != nil {
-		log.Printf("Failed to write debug file: %v", err)
-		return
-	}
-
-	log.Printf("\n/%s", strings.Repeat("*", 200))
-	log.Printf("Unsupported YouTube Playlist response.")
-	log.Printf("Please post the files in %s to DisTube support server. Thanks!", dir)
-	log.Printf("%s\\", strings.Repeat("*", 200))
 }
 
 func GetPlaylist(linkOrID string, options *Options) (*PlaylistInfo, error) {
@@ -707,7 +315,6 @@ func getPlaylist(linkOrID string, options *Options, retries int) (*PlaylistInfo,
 		}
 	}
 
-	// Parse videos
 	contents, ok := parsed.JSON["contents"].(map[string]interface{})
 	if !ok {
 		return nil, errors.New("invalid contents structure")
@@ -823,30 +430,4 @@ func getPlaylist(linkOrID string, options *Options, retries int) (*PlaylistInfo,
 
 	resp_info.Items = append(resp_info.Items, nestedResp...)
 	return resp_info, nil
-}
-
-func main() {
-	playlistURL := "playlist link here"
-
-	options := &Options{
-		Limit: 50, // Limit to 50 items
-	}
-
-	playlist, err := GetPlaylist(playlistURL, options)
-	if err != nil {
-		log.Fatalf("Error parsing playlist: %v", err)
-	}
-
-	fmt.Printf("Playlist: %s\n", playlist.Title)
-	fmt.Printf("Description: %s\n", playlist.Description)
-	fmt.Printf("Total Items: %d\n", playlist.TotalItems)
-	fmt.Printf("Views: %d\n", playlist.Views)
-	fmt.Printf("Found %d items:\n", len(playlist.Items))
-
-	for i, item := range playlist.Items {
-		if i >= 5 { // Show only first 5 items
-			break
-		}
-		fmt.Printf("%d. %s (ID: %s)\n", i+1, item.Title, item.ID)
-	}
 }
