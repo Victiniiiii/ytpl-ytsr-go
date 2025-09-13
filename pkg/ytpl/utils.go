@@ -42,47 +42,41 @@ func getContinuationToken(item map[string]interface{}) string {
 		return ""
 	}
 
-	continuationItemRenderer, ok := item["continuationItemRenderer"]
-	if !ok {
+	r, _ := item["continuationItemRenderer"].(map[string]interface{})
+	if r == nil {
 		return ""
 	}
 
-	renderer, ok := continuationItemRenderer.(map[string]interface{})
-	if !ok {
-		return ""
-	}
-
-	if continuationEndpoint, ok := renderer["continuationEndpoint"].(map[string]interface{}); ok {
-		if continuationCommand, ok := continuationEndpoint["continuationCommand"].(map[string]interface{}); ok {
-			if token, ok := continuationCommand["token"].(string); ok {
+	endpoint, _ := r["continuationEndpoint"].(map[string]interface{})
+	if endpoint != nil {
+		cmd, _ := endpoint["continuationCommand"].(map[string]interface{})
+		if cmd != nil {
+			token, _ := cmd["token"].(string)
+			if token != "" {
 				return token
 			}
 		}
 	}
 
-	if button, ok := renderer["button"].(map[string]interface{}); ok {
-		if buttonRenderer, ok := button["buttonRenderer"].(map[string]interface{}); ok {
-			if command, ok := buttonRenderer["command"].(map[string]interface{}); ok {
-				if continuationCommand, ok := command["continuationCommand"].(map[string]interface{}); ok {
-					if token, ok := continuationCommand["token"].(string); ok {
-						return token
-					}
-				}
-			}
-		}
-	}
-
-	if trigger, ok := renderer["trigger"].(map[string]interface{}); ok {
-		if continuationCommand, ok := trigger["continuationCommand"].(map[string]interface{}); ok {
-			if token, ok := continuationCommand["token"].(string); ok {
-				return token
-			}
-		}
-	}
-
-	token := findTokenRecursively(renderer)
+	button, _ := r["button"].(map[string]interface{})
+	br, _ := button["buttonRenderer"].(map[string]interface{})
+	cmd, _ := br["command"].(map[string]interface{})
+	cc, _ := cmd["continuationCommand"].(map[string]interface{})
+	token, _ := cc["token"].(string)
 	if token != "" {
 		return token
+	}
+
+	trigger, _ := r["trigger"].(map[string]interface{})
+	cc2, _ := trigger["continuationCommand"].(map[string]interface{})
+	token2, _ := cc2["token"].(string)
+	if token2 != "" {
+		return token2
+	}
+
+	token3 := findTokenRecursively(r)
+	if token3 != "" {
+		return token3
 	}
 
 	return ""

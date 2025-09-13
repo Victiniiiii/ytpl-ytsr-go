@@ -38,8 +38,6 @@ type SearchItem struct {
 	Author      *Author
 	IsLive      bool
 	Badges      []string
-	Length      int
-	PublishedAt string
 	Owner       *Owner
 }
 
@@ -68,8 +66,8 @@ type Owner struct {
 }
 
 type Context struct {
-	Client map[string]interface{}
-	User   map[string]interface{}
+	Client map[string]interface{} `json:"client"`
+	User   map[string]interface{} `json:"user"`
 }
 
 type ParsedData struct {

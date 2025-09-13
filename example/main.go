@@ -137,8 +137,7 @@ func main() {
 		Type:  "playlist",
 		Limit: 5,
 	}
-
-	playlistResults, err := ytsr.Search("programming tutorials", playlistSearchOptions)
+	playlistResults, err := ytsr.Search("tropico 6 ost", playlistSearchOptions)
 	if err != nil {
 		log.Printf("Error searching playlists: %v", err)
 	} else {
@@ -147,12 +146,10 @@ func main() {
 			fmt.Printf("%d. %s\n", i+1, item.Name)
 			fmt.Printf("   ID: %s\n", item.ID)
 			fmt.Printf("   URL: %s\n", item.URL)
-			fmt.Printf("   Video Count: %d\n", item.Length)
 			if item.Owner != nil {
 				fmt.Printf("   Owner: %s\n", item.Owner.Name)
 				fmt.Printf("   Owner Verified: %t\n", item.Owner.Verified)
 			}
-			fmt.Printf("   Published: %s\n", item.PublishedAt)
 			fmt.Println()
 		}
 	}

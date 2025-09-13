@@ -73,13 +73,8 @@ func search(searchString string, options *Options, retries int) (*SearchResult, 
 	}
 
 	if opts.Type == "playlist" {
-		cache.mu.RLock()
-		params := cache.PlaylistParams
-		cache.mu.RUnlock()
-
 		parsed.JSON, err = doPost(BaseAPIURL, opts, map[string]interface{}{
 			"context": parsed.Context,
-			"params":  params,
 			"query":   searchString,
 		})
 		if err != nil {

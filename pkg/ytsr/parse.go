@@ -66,6 +66,19 @@ func parseResponse(parsed *ParsedData, opts *Options) (*SearchResult, error) {
 			twoCol = tc
 		}
 	}
+
+	if twoCol == nil {
+		if contents, ok := parsed.JSON["contents"].(map[string]interface{}); ok {
+			if sectionList, ok := contents["sectionListRenderer"].(map[string]interface{}); ok {
+				twoCol = map[string]interface{}{
+					"primaryContents": map[string]interface{}{
+						"sectionListRenderer": sectionList,
+					},
+				}
+			}
+		}
+	}
+
 	if twoCol == nil {
 		return nil, fmt.Errorf("invalid response format")
 	}
@@ -138,7 +151,38 @@ func parseItem(item interface{}) *SearchItem {
 			return parsePlaylist(value.(map[string]interface{}))
 		case "gridVideoRenderer":
 			return parseVideo(value.(map[string]interface{}))
+		case "channelRenderer":
+			return nil
+		case "lockupViewModel":
+			return parseLockupViewModel(value.(map[string]interface{}))
+		case "gridShelfViewModel":
+			return nil
 		}
+	}
+
+	return nil
+}
+
+func parseLockupViewModel(obj map[string]interface{}) *SearchItem {
+	if contentType, ok := obj["contentType"].(string); ok && contentType == "LOCKUP_CONTENT_TYPE_PLAYLIST" {
+		item := &SearchItem{
+			Type: "playlist",
+		}
+
+		if contentId, ok := obj["contentId"].(string); ok {
+			item.ID = contentId
+			item.URL = "https://www.youtube.com/playlist?list=" + contentId
+		}
+
+		if metadata, ok := obj["metadata"].(map[string]interface{}); ok {
+			if lockupMetadata, ok := metadata["lockupMetadataViewModel"].(map[string]interface{}); ok {
+				if title, ok := lockupMetadata["title"]; ok {
+					item.Name = parseText(title)
+				}
+			}
+		}
+
+		return item
 	}
 
 	return nil
@@ -169,6 +213,16 @@ func parseVideo(obj map[string]interface{}) *SearchItem {
 
 	if desc, ok := obj["descriptionSnippet"]; ok {
 		item.Description = parseText(desc)
+	} else if detailedSnippets, ok := obj["detailedMetadataSnippets"].([]interface{}); ok && len(detailedSnippets) > 0 {
+		if snippet, ok := detailedSnippets[0].(map[string]interface{}); ok {
+			if snippetText, ok := snippet["snippetText"]; ok {
+				item.Description = parseText(snippetText)
+			}
+		}
+	} else if richSnippet, ok := obj["richSnippet"]; ok {
+		if snippetText, ok := richSnippet.(map[string]interface{})["snippetText"]; ok {
+			item.Description = parseText(snippetText)
+		}
 	}
 
 	if viewCount, ok := obj["viewCountText"]; ok {
@@ -221,16 +275,6 @@ func parsePlaylist(obj map[string]interface{}) *SearchItem {
 
 	if title, ok := obj["title"]; ok {
 		item.Name = parseText(title)
-	}
-
-	if videoCount, ok := obj["videoCount"].(string); ok {
-		if count, err := strconv.Atoi(videoCount); err == nil {
-			item.Length = count
-		}
-	}
-
-	if publishedTime, ok := obj["publishedTimeText"]; ok {
-		item.PublishedAt = parseText(publishedTime)
 	}
 
 	item.Owner = parseOwner(obj)
@@ -375,6 +419,9 @@ func parseText(text interface{}) string {
 	case string:
 		return t
 	case map[string]interface{}:
+		if content, ok := t["content"].(string); ok {
+			return content
+		}
 		if simpleText, ok := t["simpleText"].(string); ok {
 			return simpleText
 		}

@@ -16,61 +16,61 @@ Retrieved 10 items (limited to 0):
    ID: uLF6VFME2jc
    URL: https://www.youtube.com/watch?v=uLF6VFME2jc
    Duration: 3:07
-   Author: 
+   Author: 11 bit studios
 
 2. 02. Are We Alone? - Frostpunk Original Soundtrack
    ID: 3YFU5BwW5io
    URL: https://www.youtube.com/watch?v=3YFU5BwW5io
    Duration: 3:54
-   Author: 
+   Author: 11 bit studios
 
 3. 03. The Darkest Of Days - Frostpunk Original Soundtrack
    ID: 7t_ohlqvtaI
    URL: https://www.youtube.com/watch?v=7t_ohlqvtaI
    Duration: 4:42
-   Author: 
+   Author: 11 bit studios
 
 4. 04. Streets Of New London - Frostpunk Original Soundtrack
    ID: D-QoQjV0uLI
    URL: https://www.youtube.com/watch?v=D-QoQjV0uLI
    Duration: 3:59
-   Author: 
+   Author: 11 bit studios
 
 5. 05. Brave New World - Frostpunk Original Soundtrack
    ID: OvKp4XQAwY0
    URL: https://www.youtube.com/watch?v=OvKp4XQAwY0
    Duration: 4:02
-   Author: 
+   Author: 11 bit studios
 
 6. 06. The Last Flame - Frostpunk Original Soundtrack
    ID: apDHw5OJvqc
    URL: https://www.youtube.com/watch?v=apDHw5OJvqc
    Duration: 4:41
-   Author: 
+   Author: 11 bit studios
 
 7. 07. The Shepherd - Frostpunk Original Soundtrack
    ID: 6TItsVzFQ0M
    URL: https://www.youtube.com/watch?v=6TItsVzFQ0M
    Duration: 4:05
-   Author: 
+   Author: 11 bit studios
 
 8. 08. Into The Storm - Frostpunk Original Soundtrack
    ID: _oRv1FW2Xho
    URL: https://www.youtube.com/watch?v=_oRv1FW2Xho
    Duration: 4:35
-   Author: 
+   Author: 11 bit studios
 
 9. 09. The City Must Survive - Frostpunk Original Soundtrack
    ID: TpaFE6_nDJw
    URL: https://www.youtube.com/watch?v=TpaFE6_nDJw
    Duration: 4:11
-   Author: 
+   Author: 11 bit studios
 
 10. 10. Damned Souls - Frostpunk Original Soundtrack
    ID: Jb7mTSlcCfQ
    URL: https://www.youtube.com/watch?v=Jb7mTSlcCfQ
    Duration: 4:39
-   Author: 
+   Author: 11 bit studios
 
 === Example 3: ID Validation ===
 'PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G' is valid: true
@@ -88,18 +88,18 @@ Retrieved 10 items (limited to 0):
 ====================================
 === Example 1: Basic Video Search ===
 Search Query: golang tutorial
-Total Results: 335145
+Total Results: 337999
 Found 8 items
 
 1. Golang Tutorial for Beginners | Full Go Course
    ID: yyUHQIec83I
    URL: https://www.youtube.com/watch?v=yyUHQIec83I
    Duration: 3:24:59
-   Description: 
+   Description: Full Golang Tutorial to learn the Go Programming Language while building a simpl...
    Author: TechWorld with Nana
    Channel ID: UCdngmbVKX1Tgre699-XLlUA
    Verified: false
-   Views: 2242889
+   Views: 2243102
    Uploaded: 3 years ago
    Is Live: false
 
@@ -107,48 +107,48 @@ Found 8 items
    ID: 8uiZC0l4Ajw
    URL: https://www.youtube.com/watch?v=8uiZC0l4Ajw
    Duration: 1:07:53
-   Description: 
+   Description: This is a full tutorial on learning Golang! From start to finish in less than an...
    Author: Alex Mux
    Channel ID: UCr3L56DsMxhNtHqtm2AIsMw
    Verified: false
-   Views: 818728
+   Views: 818994
    Uploaded: 2 years ago
    Is Live: false
 
-3. Go Programming – Golang Course with Bonus Projects
-   ID: un6ZyFkqFKo
-   URL: https://www.youtube.com/watch?v=un6ZyFkqFKo
-   Duration: 9:32:48
-   Description: 
-   Author: freeCodeCamp.org
-   Channel ID: UC8butISFwT-Wl7EV0hUK0BQ
-   Verified: false
-   Views: 1213561
-   Uploaded: 2 years ago
-   Is Live: false
-
-4. Go in 100 Seconds
+3. Go in 100 Seconds
    ID: 446E-r0rXHI
    URL: https://www.youtube.com/watch?v=446E-r0rXHI
    Duration: 2:30
-   Description: 
+   Description: Learn the basics of the Go Programming Language. Go (not Golang) was developed a...
    Author: Fireship
    Channel ID: UCsBjURrPoezykLs9EqgamOA
    Verified: false
-   Views: 2037991
+   Views: 2038211
    Uploaded: 3 years ago
    Is Live: false
 
-5. Go (Golang) Tutorial #1 - Introduction & Setup
-   ID: etSN4X_fCnM
-   URL: https://www.youtube.com/watch?v=etSN4X_fCnM
-   Duration: 6:15
-   Description: 
-   Author: Net Ninja
-   Channel ID: UCW5YeuERMmlnqo4oq8vwUpg
+4. Go Programming – Golang Course with Bonus Projects
+   ID: un6ZyFkqFKo
+   URL: https://www.youtube.com/watch?v=un6ZyFkqFKo
+   Duration: 9:32:48
+   Description: Learn the Go programming language in this full course for beginners. You'll prac...
+   Author: freeCodeCamp.org
+   Channel ID: UC8butISFwT-Wl7EV0hUK0BQ
    Verified: false
-   Views: 310731
-   Uploaded: 4 years ago
+   Views: 1213845
+   Uploaded: 2 years ago
+   Is Live: false
+
+5. Go 1.25 just dropped with amazing features...
+   ID: rsA0rpEt1pI
+   URL: https://www.youtube.com/watch?v=rsA0rpEt1pI
+   Duration: 4:02
+   Description: A quick look at the Go 1.25 release. Topics: - Type system cleanup; - Green Tea ...
+   Author: Awesome
+   Channel ID: UCXzw-OdotBUcNA9yhuYQBwA
+   Verified: false
+   Views: 34912
+   Uploaded: 2 weeks ago
    Is Live: false
 
 === Example 2: Limited Video Search ===
@@ -158,10 +158,10 @@ Retrieved 3 items (limited to 3):
    Channel: Programming with Mosh
    URL: https://www.youtube.com/watch?v=SqcY0GlETPk
 
-2. React Full Course for free ⚛️ (2024)
-   Duration: 4:43:02
-   Channel: Bro Code
-   URL: https://www.youtube.com/watch?v=CgkZ7MvWUAA
+2. React JS Explained In 10 Minutes
+   Duration: 10:00
+   Channel: Dennis Ivy
+   URL: https://www.youtube.com/watch?v=s2skans2dP4
 
 3. React JS 19 Full Course 2025 | Build an App and Master React in 2 Hours
    Duration: 2:07:19
@@ -169,9 +169,20 @@ Retrieved 3 items (limited to 3):
    URL: https://www.youtube.com/watch?v=dCLhUialKPQ
 
 === Example 3: Playlist Search ===
-2025/09/13 17:29:59 Error searching playlists: invalid response format
+Found 2 playlist results:
+1. Tropico 6 OST
+   ID: PLZutfZtkMx7dZvxxFaRtdf9vdC3Xah4Et
+   URL: https://www.youtube.com/playlist?list=PLZutfZtkMx7dZvxxFaRtdf9vdC3Xah4Et
+
+2. Tropico 6 OST
+   ID: PL01CKeNGn6nw7soQmePfCycxGbQFMEC_x
+   URL: https://www.youtube.com/playlist?list=PL01CKeNGn6nw7soQmePfCycxGbQFMEC_x
+
 === Example 4: Safe Search ===
-2025/09/13 17:29:59 Error with safe search: invalid response format
+Safe search results (1 items):
+1. The Truth Behind Family-Friendly Content: What to Expect
+   Channel: HOT DANG SHOW
+
 === Example 5: Default Options Test ===
 Default options:
    Type: video
