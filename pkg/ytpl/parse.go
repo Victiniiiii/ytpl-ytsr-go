@@ -91,8 +91,12 @@ func parseItem(rawItem interface{}) *PlaylistItem {
 		item.Duration = parseText(lengthText)
 	}
 
-	if ownerText, ok := renderer["ownerText"].(map[string]interface{}); ok {
+	if shortBylineText, ok := renderer["shortBylineText"].(map[string]interface{}); ok {
+		item.Author = parseText(shortBylineText)
+	} else if ownerText, ok := renderer["ownerText"].(map[string]interface{}); ok {
 		item.Author = parseText(ownerText)
+	} else if longBylineText, ok := renderer["longBylineText"].(map[string]interface{}); ok {
+		item.Author = parseText(longBylineText)
 	}
 
 	return item

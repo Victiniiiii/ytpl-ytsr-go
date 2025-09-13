@@ -111,23 +111,6 @@ func findTokenRecursively(obj interface{}) string {
 	return ""
 }
 
-func checkArgs(plistID string, options *Options) *Options {
-	if options == nil {
-		options = &Options{}
-	}
-	if options.Limit <= 0 {
-		options.Limit = 100
-	}
-	if options.RequestOptions == nil {
-		options.RequestOptions = &http.Client{Timeout: 30 * time.Second}
-	}
-	if options.Query == nil {
-		options.Query = make(map[string]string)
-	}
-	options.Query["list"] = plistID
-	return options
-}
-
 func doPost(url string, client *http.Client, payload interface{}) (map[string]interface{}, error) {
 	jsonData, err := json.Marshal(payload)
 	if err != nil {

@@ -8,6 +8,7 @@ import (
 	"net/url"
 	"regexp"
 	"strings"
+	"time"
 )
 
 const (
@@ -430,4 +431,21 @@ func getPlaylist(linkOrID string, options *Options, retries int) (*PlaylistInfo,
 
 	resp_info.Items = append(resp_info.Items, nestedResp...)
 	return resp_info, nil
+}
+
+func checkArgs(plistID string, options *Options) *Options {
+	if options == nil {
+		options = &Options{}
+	}
+	if options.Limit <= 0 {
+		options.Limit = 100
+	}
+	if options.RequestOptions == nil {
+		options.RequestOptions = &http.Client{Timeout: 30 * time.Second}
+	}
+	if options.Query == nil {
+		options.Query = make(map[string]string)
+	}
+	options.Query["list"] = plistID
+	return options
 }
