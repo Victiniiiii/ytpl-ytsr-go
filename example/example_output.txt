@@ -1,5 +1,8 @@
 go run example/main.go
 
+====================================
+        YTPL TESTS
+====================================
 === Example 1: Basic Playlist Parsing ===
 Playlist: Frostpunk Original Soundtrack
 Description: 
@@ -79,3 +82,101 @@ Retrieved 10 items (limited to 0):
 'PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G' -> 'PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G'
 'https://www.youtube.com/playlist?list=PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G' -> 'PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G'
 'https://www.youtube.com/channel/UCXuqSBlHAE6Xw-yeJA0Tunw' -> 'UUXuqSBlHAE6Xw-yeJA0Tunw'
+
+====================================
+        YTSR TESTS
+====================================
+=== Example 1: Basic Video Search ===
+Search Query: golang tutorial
+Total Results: 335145
+Found 8 items
+
+1. Golang Tutorial for Beginners | Full Go Course
+   ID: yyUHQIec83I
+   URL: https://www.youtube.com/watch?v=yyUHQIec83I
+   Duration: 3:24:59
+   Description: 
+   Author: TechWorld with Nana
+   Channel ID: UCdngmbVKX1Tgre699-XLlUA
+   Verified: false
+   Views: 2242889
+   Uploaded: 3 years ago
+   Is Live: false
+
+2. Learn GO Fast: Full Tutorial
+   ID: 8uiZC0l4Ajw
+   URL: https://www.youtube.com/watch?v=8uiZC0l4Ajw
+   Duration: 1:07:53
+   Description: 
+   Author: Alex Mux
+   Channel ID: UCr3L56DsMxhNtHqtm2AIsMw
+   Verified: false
+   Views: 818728
+   Uploaded: 2 years ago
+   Is Live: false
+
+3. Go Programming – Golang Course with Bonus Projects
+   ID: un6ZyFkqFKo
+   URL: https://www.youtube.com/watch?v=un6ZyFkqFKo
+   Duration: 9:32:48
+   Description: 
+   Author: freeCodeCamp.org
+   Channel ID: UC8butISFwT-Wl7EV0hUK0BQ
+   Verified: false
+   Views: 1213561
+   Uploaded: 2 years ago
+   Is Live: false
+
+4. Go in 100 Seconds
+   ID: 446E-r0rXHI
+   URL: https://www.youtube.com/watch?v=446E-r0rXHI
+   Duration: 2:30
+   Description: 
+   Author: Fireship
+   Channel ID: UCsBjURrPoezykLs9EqgamOA
+   Verified: false
+   Views: 2037991
+   Uploaded: 3 years ago
+   Is Live: false
+
+5. Go (Golang) Tutorial #1 - Introduction & Setup
+   ID: etSN4X_fCnM
+   URL: https://www.youtube.com/watch?v=etSN4X_fCnM
+   Duration: 6:15
+   Description: 
+   Author: Net Ninja
+   Channel ID: UCW5YeuERMmlnqo4oq8vwUpg
+   Verified: false
+   Views: 310731
+   Uploaded: 4 years ago
+   Is Live: false
+
+=== Example 2: Limited Video Search ===
+Retrieved 3 items (limited to 3):
+1. React Tutorial for Beginners
+   Duration: 1:20:04
+   Channel: Programming with Mosh
+   URL: https://www.youtube.com/watch?v=SqcY0GlETPk
+
+2. React Full Course for free ⚛️ (2024)
+   Duration: 4:43:02
+   Channel: Bro Code
+   URL: https://www.youtube.com/watch?v=CgkZ7MvWUAA
+
+3. React JS 19 Full Course 2025 | Build an App and Master React in 2 Hours
+   Duration: 2:07:19
+   Channel: JavaScript Mastery
+   URL: https://www.youtube.com/watch?v=dCLhUialKPQ
+
+=== Example 3: Playlist Search ===
+2025/09/13 17:29:59 Error searching playlists: invalid response format
+=== Example 4: Safe Search ===
+2025/09/13 17:29:59 Error with safe search: invalid response format
+=== Example 5: Default Options Test ===
+Default options:
+   Type: video
+   Limit: 10
+   SafeSearch: false
+   GL: US
+   HL: en
+   UTCOffset: -300
