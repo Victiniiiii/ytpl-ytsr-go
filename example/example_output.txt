@@ -1,0 +1,81 @@
+go run example/main.go
+
+=== Example 1: Basic Playlist Parsing ===
+Playlist: Frostpunk Original Soundtrack
+Description: 
+Total Items: 13
+Views: 0
+Found 13 items
+
+=== Example 2: Limited Playlist Parsing ===
+Retrieved 10 items (limited to 0):
+1. 01. Frostpunk Theme - Frostpunk Original Soundtrack
+   ID: uLF6VFME2jc
+   URL: https://www.youtube.com/watch?v=uLF6VFME2jc
+   Duration: 3:07
+   Author: 
+
+2. 02. Are We Alone? - Frostpunk Original Soundtrack
+   ID: 3YFU5BwW5io
+   URL: https://www.youtube.com/watch?v=3YFU5BwW5io
+   Duration: 3:54
+   Author: 
+
+3. 03. The Darkest Of Days - Frostpunk Original Soundtrack
+   ID: 7t_ohlqvtaI
+   URL: https://www.youtube.com/watch?v=7t_ohlqvtaI
+   Duration: 4:42
+   Author: 
+
+4. 04. Streets Of New London - Frostpunk Original Soundtrack
+   ID: D-QoQjV0uLI
+   URL: https://www.youtube.com/watch?v=D-QoQjV0uLI
+   Duration: 3:59
+   Author: 
+
+5. 05. Brave New World - Frostpunk Original Soundtrack
+   ID: OvKp4XQAwY0
+   URL: https://www.youtube.com/watch?v=OvKp4XQAwY0
+   Duration: 4:02
+   Author: 
+
+6. 06. The Last Flame - Frostpunk Original Soundtrack
+   ID: apDHw5OJvqc
+   URL: https://www.youtube.com/watch?v=apDHw5OJvqc
+   Duration: 4:41
+   Author: 
+
+7. 07. The Shepherd - Frostpunk Original Soundtrack
+   ID: 6TItsVzFQ0M
+   URL: https://www.youtube.com/watch?v=6TItsVzFQ0M
+   Duration: 4:05
+   Author: 
+
+8. 08. Into The Storm - Frostpunk Original Soundtrack
+   ID: _oRv1FW2Xho
+   URL: https://www.youtube.com/watch?v=_oRv1FW2Xho
+   Duration: 4:35
+   Author: 
+
+9. 09. The City Must Survive - Frostpunk Original Soundtrack
+   ID: TpaFE6_nDJw
+   URL: https://www.youtube.com/watch?v=TpaFE6_nDJw
+   Duration: 4:11
+   Author: 
+
+10. 10. Damned Souls - Frostpunk Original Soundtrack
+   ID: Jb7mTSlcCfQ
+   URL: https://www.youtube.com/watch?v=Jb7mTSlcCfQ
+   Duration: 4:39
+   Author: 
+
+=== Example 3: ID Validation ===
+'PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G' is valid: true
+'https://www.youtube.com/playlist?list=PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G' is valid: true
+'https://www.youtube.com/channel/UCXuqSBlHAE6Xw-yeJA0Tunw' is valid: true
+'invalid-id' is valid: false
+
+=== Example 4: Playlist ID Extraction ===
+'PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G' -> 'PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G'
+'https://www.youtube.com/playlist?list=PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G' -> 'PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G'
+'https://www.youtube.com/channel/UCXuqSBlHAE6Xw-yeJA0Tunw' -> 'UUXuqSBlHAE6Xw-yeJA0Tunw'
