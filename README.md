@@ -1,6 +1,6 @@
 # ytpl-ytsr-go
 A package that can help grab youtube playlist and search information written in Go.  
-Special thanks to: 
+Special thanks to:  
 [ytpl](https://github.com/distubejs/ytpl)  
 [ytsr](https://github.com/distubejs/ytsr)  
 ## Features
@@ -11,4 +11,4 @@ Special thanks to:
 - Playlist search
 - Safe search
 ## Usage
-Read example/main.go for all the usages
+Read example/main.go for all the usage codes
