@@ -11,4 +11,7 @@ Special thanks to:
 - Playlist search
 - Safe search
 ## Usage
-Read example/main.go for all the usage codes
+```bash 
+go run example/main.go  
+```   
+Check the /example folder for the example script and its output.
