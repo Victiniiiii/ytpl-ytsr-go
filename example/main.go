@@ -3,8 +3,9 @@ package main
 import (
 	"fmt"
 	"log"
-	"ytpl-ytsr-go/pkg/ytpl"
-	"ytpl-ytsr-go/pkg/ytsr"
+
+	"github.com/Victiniiiii/ytpl-ytsr-go/pkg/ytpl"
+	"github.com/Victiniiiii/ytpl-ytsr-go/pkg/ytsr"
 )
 
 const playlistURL string = "https://www.youtube.com/playlist?list=PLpas7-jjCh0Z7-t9yqhg3ibXTgeZhtH-G"
